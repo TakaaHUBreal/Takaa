@@ -1,0 +1,754 @@
+--// =========================================
+--// TAKAA HUB - 3s LOADING, EVADE SCRIPT 🔥🖤 (MAX ESP)
+--// =========================================
+
+pcall(function()
+    if getgenv().TAKAA_LOADED_V1_OP then
+        getgenv().TAKAA_LOADED_V1_OP = false
+        task.wait(0.2)
+    end
+    if getgenv().TAKAA_LOADED_ESP_V1 then
+        getgenv().TAKAA_LOADED_ESP_V1 = false
+        task.wait(0.2)
+    end
+end)
+getgenv().TAKAA_LOADED_V1_OP = true
+getgenv().TAKAA_LOADED_ESP_V1 = true
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local UIS = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+local CoreGui = game:GetService("CoreGui")
+local LocalPlayer = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
+
+pcall(function()
+    local pGui = LocalPlayer:FindFirstChild("PlayerGui")
+    if pGui and pGui:FindFirstChild("TAKAA_HUB_V1") then
+        pGui.TAKAA_HUB_V1:Destroy()
+    end
+    if pGui and pGui:FindFirstChild("TAKAA_ESP_GUI_V1") then
+        pGui.TAKAA_ESP_GUI_V1:Destroy()
+    end
+    if Workspace:FindFirstChild("TAKAA_ESP_SYSTEM_V1") then
+        Workspace.TAKAA_ESP_SYSTEM_V1:Destroy()
+    end
+    if Workspace:FindFirstChild("TAKAA_STABLE_5K_BASE") then
+        Workspace.TAKAA_STABLE_5K_BASE:Destroy()
+    end
+end)
+
+pcall(function()
+    LocalPlayer.CameraMaxZoomDistance = 400
+    LocalPlayer.CameraMinZoomDistance = 0.5
+end)
+
+local function PlayClickSound()
+    pcall(function()
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://6895070853"
+        sound.Volume = 1
+        sound.Parent = LocalPlayer:FindFirstChild("PlayerGui") or CoreGui
+        sound:Play()
+        game:GetService("Debris"):AddItem(sound, 1)
+    end)
+end
+
+local function SendNotification(title, text)
+    PlayClickSound()
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = title;
+            Text = text;
+            Duration = 2;
+        })
+    end)
+end
+
+--// GUI CONTAINER
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "TAKAA_HUB_V1"
+Gui.ResetOnSpawn = false
+Gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+--// 1. LOADING SCREEN (3 Seconds) - Dark Theme
+local LoadFrame = Instance.new("Frame")
+LoadFrame.Size = UDim2.new(0, 300, 0, 160)
+LoadFrame.Position = UDim2.new(0.5, -150, 0.5, -80)
+LoadFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
+LoadFrame.BorderSizePixel = 0
+LoadFrame.Parent = Gui
+Instance.new("UICorner", LoadFrame).CornerRadius = UDim.new(0, 😎
+local LoadStroke = Instance.new("UIStroke", LoadFrame)
+LoadStroke.Color = Color3.fromRGB(50, 50, 65)
+LoadStroke.Thickness = 1.5
+
+local LoadTitle = Instance.new("TextLabel")
+LoadTitle.Size = UDim2.new(1, 0, 0, 30)
+LoadTitle.Position = UDim2.new(0, 0, 0, 15)
+LoadTitle.BackgroundTransparency = 1
+LoadTitle.Text = "🔥 TAKAA HUB LOADING (3s) 🔥"
+LoadTitle.TextColor3 = Color3.fromRGB(220, 220, 230)
+LoadTitle.Font = Enum.Font.GothamBold
+LoadTitle.TextSize = 12
+LoadTitle.Parent = LoadFrame
+
+local LoadStatus = Instance.new("TextLabel")
+LoadStatus.Size = UDim2.new(1, 0, 0, 20)
+LoadStatus.Position = UDim2.new(0, 0, 0, 55)
+LoadStatus.BackgroundTransparency = 1
+LoadStatus.Text = "Loading Evade Script & ESP..."
+LoadStatus.TextColor3 = Color3.fromRGB(180, 180, 190)
+LoadStatus.Font = Enum.Font.Gotham
+LoadStatus.TextSize = 9
+LoadStatus.Parent = LoadFrame
+
+local BarBg = Instance.new("Frame")
+BarBg.Size = UDim2.new(1, -40, 0, 10)
+BarBg.Position = UDim2.new(0, 20, 0, 95)
+BarBg.BackgroundColor3 = Color3.fromRGB(25, 25, 32)
+BarBg.Parent = LoadFrame
+Instance.new("UICorner", BarBg).CornerRadius = UDim.new(1, 0)
+
+local BarFill = Instance.new("Frame")
+BarFill.Size = UDim2.new(0, 0, 1, 0)
+BarFill.BackgroundColor3 = Color3.fromRGB(0, 255, 120)
+BarFill.Parent = BarBg
+Instance.new("UICorner", BarFill).CornerRadius = UDim.new(1, 0)
+
+--// 2. MAIN MENU GUI (Dark Theme Background)
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 320, 0, 220)
+Main.Position = UDim2.new(0.5, -160, 0.5, -110)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Visible = false
+Main.Parent = Gui
+
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 6)
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(50, 50, 65)
+Stroke.Thickness = 1.5
+
+-- Loading 3 វិនាទីរួចបើក Main Menu ស្វ័យប្រវត្តិ
+task.spawn(function()
+    for i = 1, 100 do
+        BarFill.Size = UDim2.new(i/100, 0, 1, 0)
+        if i == 50 then LoadStatus.Text = "Almost Ready..." end
+        if i == 90 then LoadStatus.Text = "Done! ✅" end
+        task.wait(0.03)
+    end
+    task.wait(0.2)
+    LoadFrame.Visible = false
+    Main.Visible = true
+    SendNotification("TAKAA HUB", "Evade Script Loaded Successfully ✅")
+end)
+
+--// កូដប្រព័ន្ធហ្គេម Evade & ESP Configs
+getgenv().RespawnDown = false
+getgenv().AutoFarmSky = false 
+getgenv().AutoRevive = false 
+getgenv().TeleportToDowned = true
+getgenv().GiveItemEnabled = false
+getgenv().AutoCollect = true
+getgenv().AutoWhistle = true
+getgenv().AntiAfkActive = true
+getgenv().EspPlayer = true
+getgenv().NextbotEsp = true
+getgenv().AntiNextbot = false
+getgenv().CustomSpeed = false
+getgenv().SpeedValue = 50
+getgenv().FullBright = false
+getgenv().AfkMode = false
+getgenv().AntiFly = false
+getgenv().DoubleJumpEnabled = false
+
+local EspFolder = Instance.new("Folder")
+EspFolder.Name = "TAKAA_ESP_SYSTEM_V1"
+EspFolder.Parent = Workspace
+
+local function IsDowned(plr)
+    if not plr or not plr.Character then return false end
+    local char = plr.Character
+    if char:GetAttribute("Downed") == true or char:GetAttribute("Incapacitated") == true or char:GetAttribute("IsDowned") == true then return true end
+    if char:FindFirstChild("RevivePrompt") or char:FindFirstChild("Revive") or char:FindFirstChild("Downed") then return true end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if hum and hum.Health <= 0 then return true end
+    return false
+end
+
+local downedTimers = {}
+RunService.RenderStepped:Connect(function()
+    if not getgenv().TAKAA_LOADED_ESP_V1 then return end
+    pcall(function()
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= LocalPlayer then
+                local char = p.Character
+                local hlName = "ESP_HL_" .. p.Name
+                local tagName = "ESP_TAG_" .. p.Name
+                local hl = EspFolder:FindFirstChild(hlName)
+                local tag = EspFolder:FindFirstChild(tagName)
+
+                if getgenv().EspPlayer and char and char:FindFirstChild("HumanoidRootPart") then
+                    local isDown = IsDowned(p)
+                    
+                    if isDown then
+                        if not downedTimers[p] then downedTimers[p] = tick() end
+                    else
+                        downedTimers[p] = nil
+                    end
+
+                    if not hl then
+                        hl = Instance.new("Highlight")
+                        hl.Name = hlName
+                        hl.Parent = EspFolder
+                    end
+                    hl.Adornee = char
+                    hl.FillColor = isDown and Color3.fromRGB(255, 30, 30) or Color3.fromRGB(0, 255, 120)
+                    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                    hl.FillTransparency = 0.25
+
+                    if not tag then
+                        tag = Instance.new("BillboardGui")
+                        tag.Name = tagName
+                        tag.Size = UDim2.new(0, 220, 0, 40)
+                        tag.AlwaysOnTop = true
+                        tag.StudsOffset = Vector3.new(0, 3.8, 0)
+
+                        local lbl = Instance.new("TextLabel")
+                        lbl.Name = "Info"
+                        lbl.Size = UDim2.new(1, 0, 1, 0)
+                        lbl.BackgroundTransparency = 1
+                        lbl.Font = Enum.Font.GothamBold
+                        lbl.TextSize = 12
+                        lbl.TextStrokeTransparency = 0
+                        lbl.Parent = tag
+                        tag.Parent = EspFolder
+                    end
+
+                    local targetPart = char:FindFirstChild("Head") or char.HumanoidRootPart
+                    tag.Adornee = targetPart
+                    local myChar = LocalPlayer.Character
+                    local dist = (myChar and myChar:FindFirstChild("HumanoidRootPart")) and math.floor((myChar.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude) or 0
+                    
+                    local lbl = tag:FindFirstChild("Info")
+                    if lbl then
+                        if isDown and downedTimers[p] then
+                            local dieTime = math.floor(tick() - downedTimers[p])
+                            lbl.Text = p.DisplayName .. " [" .. dist .. "m]\n⚠️ DOWNED [Time: " .. dieTime .. "s]"
+                            lbl.TextColor3 = Color3.fromRGB(255, 40, 40)
+                        else
+                            lbl.Text = p.DisplayName .. " [" .. dist .. "m]"
+                            lbl.TextColor3 = Color3.fromRGB(0, 255, 120)
+                        end
+                    end
+                else
+                    if hl then hl:Destroy() end
+                    if tag then tag:Destroy() end
+                    downedTimers[p] = nil
+                end
+            end
+        end
+
+        for _, obj in ipairs(Workspace:GetChildren()) do
+            if obj:FindFirstChild("HumanoidRootPart") and not Players:GetPlayerFromCharacter(obj) then
+                local nbHlName = "NB_HL_" .. obj.Name
+                local nbHl = EspFolder:FindFirstChild(nbHlName)
+                if getgenv().NextbotEsp then
+                    if not nbHl then
+                        nbHl = Instance.new("Highlight")
+                        nbHl.Name = nbHlName
+                        nbHl.FillColor = Color3.fromRGB(255, 0, 0)
+                        nbHl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                        nbHl.Parent = EspFolder
+                    end
+                    nbHl.Adornee = obj
+                else
+                    if nbHl then nbHl:Destroy() end
+                end
+            end
+        end
+    end)
+end)
+
+local function SetupAntiAFK()
+    pcall(function()
+        local vu = game:GetService("VirtualUser")
+        LocalPlayer.Idled:Connect(function()
+            if getgenv().AntiAfkActive or getgenv().AfkMode or getgenv().AutoFarmSky then
+                vu:Button2Down(Vector2.new(0,0), Camera.CFrame)
+                task.wait(1)
+                vu:Button2Up(Vector2.new(0,0), Camera.CFrame)
+            end
+        end)
+    end)
+end
+SetupAntiAFK()
+
+task.spawn(function()
+    local skyPart = nil
+    while task.wait(0.5) do
+        pcall(function()
+            if getgenv().AutoFarmSky then
+                if not skyPart or not skyPart.Parent then
+                    skyPart = Instance.new("Part")
+                    skyPart.Name = "TAKAA_STABLE_5K_BASE"
+                    skyPart.Size = Vector3.new(30, 1, 30)
+                    skyPart.Position = Vector3.new(0, 5000, 0)
+                    skyPart.Anchored = true
+                    skyPart.Transparency = 0.5
+                    skyPart.BrickColor = BrickColor.new("Really red")
+                    skyPart.Parent = Workspace
+                end
+                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local hrp = LocalPlayer.Character.HumanoidRootPart
+                    if hrp.Position.Y < 4900 then
+                        hrp.CFrame = CFrame.new(0, 5010, 0)
+                    end
+                end
+            else
+                if skyPart then
+                    skyPart:Destroy()
+                    skyPart = nil
+                end
+            end
+        end)
+    end
+end)
+
+task.spawn(function()
+    while task.wait(0.3) do
+        pcall(function()
+            if getgenv().AutoRevive and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local myRoot = LocalPlayer.Character.HumanoidRootPart
+                for _, plr in pairs(Players:GetPlayers()) do
+                    if plr ~= LocalPlayer and plr.Character then
+                        local char = plr.Character
+                        local root = char:FindFirstChild("HumanoidRootPart")
+                        if root and IsDowned(plr) then
+                            if getgenv().TeleportToDowned then
+                                myRoot.CFrame = root.CFrame * CFrame.new(0, 0, 3)
+                            end
+                            for _, descendant in pairs(char:GetDescendants()) do
+                                if descendant:IsA("ProximityPrompt") then
+                                    fireproximityprompt(descendant)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+local origBrightness = Lighting.Brightness
+local origClockTime = Lighting.ClockTime
+local origFogEnd = Lighting.FogEnd
+local origGlobalShadows = Lighting.GlobalShadows
+local origOutdoorAmbient = Lighting.OutdoorAmbient
+
+RunService.RenderStepped:Connect(function()
+    pcall(function()
+        if getgenv().FullBright then
+            Lighting.Brightness = 2
+            Lighting.ClockTime = 14
+            Lighting.FogEnd = 100000
+            Lighting.GlobalShadows = false
+            Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+        else
+            Lighting.Brightness = origBrightness
+            Lighting.ClockTime = origClockTime
+            Lighting.FogEnd = origFogEnd
+            Lighting.GlobalShadows = origGlobalShadows
+            Lighting.OutdoorAmbient = origOutdoorAmbient
+        end
+    end)
+end)
+
+local Topbar = Instance.new("Frame")
+Topbar.Size = UDim2.new(1, 0, 0, 22)
+Topbar.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
+Topbar.BorderSizePixel = 0
+Topbar.Parent = Main
+Instance.new("UICorner", Topbar).CornerRadius = UDim.new(0, 6)
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -60, 1, 0)
+Title.Position = UDim2.new(0, 6, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "🔥 TAKAA HUB - EVADE MAX BLACK 🖤"
+Title.TextColor3 = Color3.fromRGB(220, 220, 230)
+Title.TextSize = 8
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Topbar
+
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 16, 0, 16)
+CloseBtn.Position = UDim2.new(1, -19, 0, 3)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 9
+CloseBtn.Parent = Topbar
+Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 3)
+
+local OpenBtn = Instance.new("ImageButton")
+OpenBtn.Name = "OpenButton"
+OpenBtn.Size = UDim2.new(0, 42, 0, 42)
+OpenBtn.Position = UDim2.new(0.02, 0, 0.15, 0)
+OpenBtn.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+OpenBtn.Visible = false
+OpenBtn.Active = true
+OpenBtn.Parent = Gui
+Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(1, 0)
+local OpenStroke = Instance.new("UIStroke", OpenBtn)
+OpenStroke.Color = Color3.fromRGB(50, 50, 65)
+OpenStroke.Thickness = 1.5
+
+task.spawn(function()
+    pcall(function()
+        OpenBtn.Image = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+    end)
+end)
+
+CloseBtn.Activated:Connect(function() PlayClickSound(); Main.Visible = false; OpenBtn.Visible = true end)
+OpenBtn.Activated:Connect(function() PlayClickSound(); Main.Visible = true; OpenBtn.Visible = false end)
+
+local Sidebar = Instance.new("Frame")
+Sidebar.Size = UDim2.new(0, 100, 1, -22)
+Sidebar.Position = UDim2.new(0, 0, 0, 22)
+Sidebar.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+Sidebar.BorderSizePixel = 0
+Sidebar.Parent = Main
+
+local ProfileCard = Instance.new("Frame")
+ProfileCard.Size = UDim2.new(1, -4, 0, 44)
+ProfileCard.Position = UDim2.new(0, 2, 0, 2)
+ProfileCard.BackgroundColor3 = Color3.fromRGB(25, 25, 32)
+ProfileCard.Parent = Sidebar
+Instance.new("UICorner", ProfileCard).CornerRadius = UDim.new(0, 3)
+
+local AvatarContainer = Instance.new("Frame")
+AvatarContainer.Size = UDim2.new(0, 38, 0, 38)
+AvatarContainer.Position = UDim2.new(0, 3, 0.5, -19)
+AvatarContainer.BackgroundColor3 = Color3.fromRGB(50, 50, 65)
+AvatarContainer.Parent = ProfileCard
+Instance.new("UICorner", AvatarContainer).CornerRadius = UDim.new(1, 0)
+
+local AvatarImg = Instance.new("ImageLabel")
+AvatarImg.Size = UDim2.new(1, -3, 1, -3)
+AvatarImg.Position = UDim2.new(0, 1.5, 0, 1.5)
+AvatarImg.BackgroundTransparency = 1
+AvatarImg.Image = ""
+AvatarImg.Parent = AvatarContainer
+Instance.new("UICorner", AvatarImg).CornerRadius = UDim.new(1, 0)
+
+task.spawn(function()
+    pcall(function()
+        AvatarImg.Image = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+    end)
+end)
+
+local NameLbl = Instance.new("TextLabel")
+NameLbl.Size = UDim2.new(1, -44, 0, 14)
+NameLbl.Position = UDim2.new(0, 44, 0, 2)
+NameLbl.BackgroundTransparency = 1
+NameLbl.Text = LocalPlayer.DisplayName
+NameLbl.Font = Enum.Font.GothamBlack
+NameLbl.TextSize = 9.5
+NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+NameLbl.TextXAlignment = Enum.TextXAlignment.Left
+NameLbl.Parent = ProfileCard
+
+local UserLbl = Instance.new("TextLabel")
+UserLbl.Size = UDim2.new(1, -44, 0, 12)
+UserLbl.Position = UDim2.new(0, 44, 0, 16)
+UserLbl.BackgroundTransparency = 1
+UserLbl.Text = "@" .. LocalPlayer.Name
+UserLbl.TextColor3 = Color3.fromRGB(160, 160, 170)
+UserLbl.Font = Enum.Font.Gotham
+UserLbl.TextSize = 7
+UserLbl.TextXAlignment = Enum.TextXAlignment.Left
+UserLbl.Parent = ProfileCard
+
+local PingLbl = Instance.new("TextLabel")
+PingLbl.Size = UDim2.new(1, -44, 0, 12)
+PingLbl.Position = UDim2.new(0, 44, 0, 29)
+PingLbl.BackgroundTransparency = 1
+PingLbl.Text = "Ping: 0ms"
+PingLbl.TextColor3 = Color3.fromRGB(0, 255, 120)
+PingLbl.Font = Enum.Font.GothamBold
+PingLbl.TextSize = 7
+PingLbl.TextXAlignment = Enum.TextXAlignment.Left
+PingLbl.Parent = ProfileCard
+
+task.spawn(function()
+    while task.wait(0.5) do
+        pcall(function()
+            local pingVal = math.floor(LocalPlayer:GetNetworkPing() * 1000)
+            PingLbl.Text = "Ping: " .. pingVal .. "ms"
+            if pingVal > 150 then
+                PingLbl.TextColor3 = Color3.fromRGB(255, 50, 50)
+            else
+                PingLbl.TextColor3 = Color3.fromRGB(0, 255, 120)
+            end
+        end)
+    end
+end)
+
+local DiscordBtn = Instance.new("TextButton")
+DiscordBtn.Size = UDim2.new(1, -4, 0, 18)
+DiscordBtn.Position = UDim2.new(0, 2, 1, -20)
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+DiscordBtn.Text = "📋 Copy Discord"
+DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordBtn.Font = Enum.Font.GothamBold
+DiscordBtn.TextSize = 7.5
+DiscordBtn.Parent = Sidebar
+Instance.new("UICorner", DiscordBtn).CornerRadius = UDim.new(0, 3)
+
+DiscordBtn.Activated:Connect(function()
+    PlayClickSound()
+    pcall(function()
+        setclipboard("https://discord.gg/takaahub")
+        SendNotification("TAKAA HUB", "Discord Link Copied!")
+    end)
+end)
+
+local SidebarList = Instance.new("UIListLayout")
+SidebarList.Padding = UDim.new(0, 2)
+SidebarList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+SidebarList.Parent = Sidebar
+
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(1, -105, 1, -25)
+TabContainer.Position = UDim2.new(0, 102, 0, 24)
+TabContainer.BackgroundTransparency = 1
+TabContainer.Parent = Main
+
+local Tabs = {}
+local function CreateTab(name)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -4, 0, 21)
+    btn.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(160, 160, 170)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 8
+    btn.Parent = Sidebar
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 3)
+
+    local frame = Instance.new("ScrollingFrame")
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundTransparency = 1
+    frame.Visible = false
+    frame.CanvasSize = UDim2.new(0, 0, 0, 240)
+    frame.ScrollBarThickness = 2
+    frame.Parent = TabContainer
+
+    local list = Instance.new("UIListLayout")
+    list.Padding = UDim.new(0, 3)
+    list.Parent = frame
+
+    btn.Activated:Connect(function()
+        PlayClickSound()
+        for _, t in pairs(Tabs) do
+            t.btn.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+            t.btn.TextColor3 = Color3.fromRGB(160, 160, 170)
+            t.frame.Visible = false
+        end
+        btn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        frame.Visible = true
+    end)
+
+    Tabs[name] = {btn = btn, frame = frame}
+    return frame
+end
+
+local MainTab = CreateTab("Main")
+local CombatTab = CreateTab("Combat")
+local UtilityTab = CreateTab("Utility")
+local VisualsTab = CreateTab("Visuals")
+
+Tabs["Main"].btn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+Tabs["Main"].btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tabs["Main"].frame.Visible = true
+
+local function CreateToggle(parent, text, flag)
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(1, -4, 0, 21)
+    f.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+    f.Parent = parent
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 3)
+
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, -35, 1, 0)
+    lbl.Position = UDim2.new(0, 5, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = text
+    lbl.TextColor3 = Color3.fromRGB(220, 220, 230)
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextSize = 8
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.Parent = f
+
+    local sw = Instance.new("Frame")
+    sw.Size = UDim2.new(0, 22, 0, 12)
+    sw.Position = UDim2.new(1, -25, 0.5, -6)
+    sw.BackgroundColor3 = getgenv()[flag] and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(55, 55, 65)
+    sw.Parent = f
+    Instance.new("UICorner", sw).CornerRadius = UDim.new(1, 0)
+
+    local dot = Instance.new("Frame")
+    dot.Size = UDim2.new(0, 8, 0, 😎
+    dot.Position = getgenv()[flag] and UDim2.new(1, -10, 0.5, -4) or UDim2.new(0, 2, 0.5, -4)
+    dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    dot.Parent = sw
+    Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+
+    local click = Instance.new("TextButton")
+    click.Size = UDim2.new(1, 0, 1, 0)
+    click.BackgroundTransparency = 1
+    click.Text = ""
+    click.Parent = f
+
+    click.Activated:Connect(function()
+        PlayClickSound()
+        getgenv()[flag] = not getgenv()[flag]
+        sw.BackgroundColor3 = getgenv()[flag] and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(55, 55, 65)
+        dot.Position = getgenv()[flag] and UDim2.new(1, -10, 0.5, -4) or UDim2.new(0, 2, 0.5, -4)
+        
+        if getgenv()[flag] then
+            SendNotification("TAKAA HUB", text .. " Enabled ✅")
+        else
+            SendNotification("TAKAA HUB", text .. " Disabled ❌")
+        end
+    end)
+end
+
+local function CreateSpeedDropdown(parent, text, flag)
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(1, -4, 0, 26)
+    f.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+    f.Parent = parent
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 3)
+
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, -75, 1, 0)
+    lbl.Position = UDim2.new(0, 5, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = text
+    lbl.TextColor3 = Color3.fromRGB(220, 220, 230)
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextSize = 8
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.Parent = f
+
+    local dropdownBtn = Instance.new("TextButton")
+    dropdownBtn.Size = UDim2.new(0, 68, 0, 18)
+    dropdownBtn.Position = UDim2.new(1, -71, 0.5, -9)
+    dropdownBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+    dropdownBtn.Text = "Speed: " .. getgenv()[flag]
+    dropdownBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    dropdownBtn.Font = Enum.Font.GothamBold
+    dropdownBtn.TextSize = 7.5
+    dropdownBtn.Parent = f
+    Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 3)
+
+    local listFrame = Instance.new("Frame")
+    listFrame.Size = UDim2.new(0, 68, 0, 98)
+    listFrame.Position = UDim2.new(1, -71, 1, 2)
+    listFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
+    listFrame.Visible = false
+    listFrame.ZIndex = 50
+    listFrame.Parent = f
+    Instance.new("UICorner", listFrame).CornerRadius = UDim.new(0, 3)
+    local listStroke = Instance.new("UIStroke", listFrame)
+    listStroke.Color = Color3.fromRGB(50, 50, 65)
+    listStroke.Thickness = 1
+
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 2)
+    listLayout.Parent = listFrame
+
+    local speeds = {50, 100, 500, 1000, 2000}
+    for _, spd in ipairs(speeds) do
+        local optBtn = Instance.new("TextButton")
+        optBtn.Size = UDim2.new(1, 0, 0, 18)
+        optBtn.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+        optBtn.Text = spd == 2000 and "2000 (x4)" or tostring(spd)
+        optBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        optBtn.Font = Enum.Font.GothamBold
+        optBtn.TextSize = 7.5
+        optBtn.ZIndex = 51
+        optBtn.Parent = listFrame
+        Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 2)
+
+        optBtn.Activated:Connect(function()
+            PlayClickSound()
+            getgenv()[flag] = spd
+            dropdownBtn.Text = "Speed: " .. spd
+            listFrame.Visible = false
+            SendNotification("TAKAA HUB", "Speed set to " .. spd)
+        end)
+    end
+
+    dropdownBtn.Activated:Connect(function()
+        PlayClickSound()
+        listFrame.Visible = not listFrame.Visible
+    end)
+end
+
+CreateToggle(MainTab, "Respawn Down", "RespawnDown")
+CreateToggle(MainTab, "AFK Mode", "AfkMode")
+CreateToggle(MainTab, "AFK Farm Sky", "AutoFarmSky")
+CreateToggle(MainTab, "Auto Revive & TP", "AutoRevive")
+CreateToggle(MainTab, "Give Item", "GiveItemEnabled")
+
+CreateToggle(CombatTab, "Anti-Nextbot", "AntiNextbot")
+CreateToggle(CombatTab, "Anti-Flying", "AntiFly")
+CreateToggle(CombatTab, "Enable Speed", "CustomSpeed")
+CreateSpeedDropdown(CombatTab, "Speed Select", "SpeedValue")
+
+CreateToggle(UtilityTab, "Auto Collect", "AutoCollect")
+CreateToggle(UtilityTab, "Auto Whistle", "AutoWhistle")
+CreateToggle(UtilityTab, "Double Jump", "DoubleJumpEnabled")
+
+CreateToggle(VisualsTab, "Players ESP", "EspPlayer")
+CreateToggle(VisualsTab, "Nextbot ESP", "NextbotEsp")
+CreateToggle(VisualsTab, "Fullbright", "FullBright")
+
+local function MakeDraggable(dragTarget, moveTarget)
+    local Dragging, DragStart, StartPos
+    dragTarget.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = true
+            DragStart = input.Position
+            StartPos = moveTarget.Position
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - DragStart
+            moveTarget.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X, StartPos.Y.Scale, StartPos.Y.Offset + delta.Y)
+        end
+    end)
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = false
+        end
+    end)
+end
+
+MakeDraggable(Topbar, Main)
+MakeDraggable(OpenBtn, OpenBtn)
+MakeDraggable(LoadFrame, LoadFrame)
