@@ -81,7 +81,7 @@ LoadFrame.Position = UDim2.new(0.5, -150, 0.5, -80)
 LoadFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
 LoadFrame.BorderSizePixel = 0
 LoadFrame.Parent = Gui
-Instance.new("UICorner", LoadFrame).CornerRadius = UDim.new(0, 😎
+Instance.new("UICorner", LoadFrame).CornerRadius = UDim.new(0, 8)
 local LoadStroke = Instance.new("UIStroke", LoadFrame)
 LoadStroke.Color = Color3.fromRGB(50, 50, 65)
 LoadStroke.Thickness = 1.5
@@ -135,7 +135,7 @@ local Stroke = Instance.new("UIStroke", Main)
 Stroke.Color = Color3.fromRGB(50, 50, 65)
 Stroke.Thickness = 1.5
 
--- Loading 3 វិនាទីរួចបើក Main Menu ស្វ័យប្រវត្តិ
+-- Loading 3 seconds animation & open Main Menu
 task.spawn(function()
     for i = 1, 100 do
         BarFill.Size = UDim2.new(i/100, 0, 1, 0)
@@ -149,7 +149,7 @@ task.spawn(function()
     SendNotification("TAKAA HUB", "Evade Script Loaded Successfully ✅")
 end)
 
---// កូដប្រព័ន្ធហ្គេម Evade & ESP Configs
+--// Evade Configs
 getgenv().RespawnDown = false
 getgenv().AutoFarmSky = false 
 getgenv().AutoRevive = false 
@@ -321,56 +321,6 @@ task.spawn(function()
     end
 end)
 
-task.spawn(function()
-    while task.wait(0.3) do
-        pcall(function()
-            if getgenv().AutoRevive and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local myRoot = LocalPlayer.Character.HumanoidRootPart
-                for _, plr in pairs(Players:GetPlayers()) do
-                    if plr ~= LocalPlayer and plr.Character then
-                        local char = plr.Character
-                        local root = char:FindFirstChild("HumanoidRootPart")
-                        if root and IsDowned(plr) then
-                            if getgenv().TeleportToDowned then
-                                myRoot.CFrame = root.CFrame * CFrame.new(0, 0, 3)
-                            end
-                            for _, descendant in pairs(char:GetDescendants()) do
-                                if descendant:IsA("ProximityPrompt") then
-                                    fireproximityprompt(descendant)
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end)
-    end
-end)
-
-local origBrightness = Lighting.Brightness
-local origClockTime = Lighting.ClockTime
-local origFogEnd = Lighting.FogEnd
-local origGlobalShadows = Lighting.GlobalShadows
-local origOutdoorAmbient = Lighting.OutdoorAmbient
-
-RunService.RenderStepped:Connect(function()
-    pcall(function()
-        if getgenv().FullBright then
-            Lighting.Brightness = 2
-            Lighting.ClockTime = 14
-            Lighting.FogEnd = 100000
-            Lighting.GlobalShadows = false
-            Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
-        else
-            Lighting.Brightness = origBrightness
-            Lighting.ClockTime = origClockTime
-            Lighting.FogEnd = origFogEnd
-            Lighting.GlobalShadows = origGlobalShadows
-            Lighting.OutdoorAmbient = origOutdoorAmbient
-        end
-    end)
-end)
-
 local Topbar = Instance.new("Frame")
 Topbar.Size = UDim2.new(1, 0, 0, 22)
 Topbar.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
@@ -467,17 +417,6 @@ NameLbl.TextSize = 9.5
 NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
 NameLbl.TextXAlignment = Enum.TextXAlignment.Left
 NameLbl.Parent = ProfileCard
-
-local UserLbl = Instance.new("TextLabel")
-UserLbl.Size = UDim2.new(1, -44, 0, 12)
-UserLbl.Position = UDim2.new(0, 44, 0, 16)
-UserLbl.BackgroundTransparency = 1
-UserLbl.Text = "@" .. LocalPlayer.Name
-UserLbl.TextColor3 = Color3.fromRGB(160, 160, 170)
-UserLbl.Font = Enum.Font.Gotham
-UserLbl.TextSize = 7
-UserLbl.TextXAlignment = Enum.TextXAlignment.Left
-UserLbl.Parent = ProfileCard
 
 local PingLbl = Instance.new("TextLabel")
 PingLbl.Size = UDim2.new(1, -44, 0, 12)
@@ -609,7 +548,7 @@ local function CreateToggle(parent, text, flag)
     Instance.new("UICorner", sw).CornerRadius = UDim.new(1, 0)
 
     local dot = Instance.new("Frame")
-    dot.Size = UDim2.new(0, 8, 0, 😎
+    dot.Size = UDim2.new(0, 8, 0, 8)
     dot.Position = getgenv()[flag] and UDim2.new(1, -10, 0.5, -4) or UDim2.new(0, 2, 0.5, -4)
     dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     dot.Parent = sw
@@ -635,79 +574,6 @@ local function CreateToggle(parent, text, flag)
     end)
 end
 
-local function CreateSpeedDropdown(parent, text, flag)
-    local f = Instance.new("Frame")
-    f.Size = UDim2.new(1, -4, 0, 26)
-    f.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
-    f.Parent = parent
-    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 3)
-
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -75, 1, 0)
-    lbl.Position = UDim2.new(0, 5, 0, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = text
-    lbl.TextColor3 = Color3.fromRGB(220, 220, 230)
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 8
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.Parent = f
-
-    local dropdownBtn = Instance.new("TextButton")
-    dropdownBtn.Size = UDim2.new(0, 68, 0, 18)
-    dropdownBtn.Position = UDim2.new(1, -71, 0.5, -9)
-    dropdownBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
-    dropdownBtn.Text = "Speed: " .. getgenv()[flag]
-    dropdownBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    dropdownBtn.Font = Enum.Font.GothamBold
-    dropdownBtn.TextSize = 7.5
-    dropdownBtn.Parent = f
-    Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 3)
-
-    local listFrame = Instance.new("Frame")
-    listFrame.Size = UDim2.new(0, 68, 0, 98)
-    listFrame.Position = UDim2.new(1, -71, 1, 2)
-    listFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
-    listFrame.Visible = false
-    listFrame.ZIndex = 50
-    listFrame.Parent = f
-    Instance.new("UICorner", listFrame).CornerRadius = UDim.new(0, 3)
-    local listStroke = Instance.new("UIStroke", listFrame)
-    listStroke.Color = Color3.fromRGB(50, 50, 65)
-    listStroke.Thickness = 1
-
-    local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 2)
-    listLayout.Parent = listFrame
-
-    local speeds = {50, 100, 500, 1000, 2000}
-    for _, spd in ipairs(speeds) do
-        local optBtn = Instance.new("TextButton")
-        optBtn.Size = UDim2.new(1, 0, 0, 18)
-        optBtn.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
-        optBtn.Text = spd == 2000 and "2000 (x4)" or tostring(spd)
-        optBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-        optBtn.Font = Enum.Font.GothamBold
-        optBtn.TextSize = 7.5
-        optBtn.ZIndex = 51
-        optBtn.Parent = listFrame
-        Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 2)
-
-        optBtn.Activated:Connect(function()
-            PlayClickSound()
-            getgenv()[flag] = spd
-            dropdownBtn.Text = "Speed: " .. spd
-            listFrame.Visible = false
-            SendNotification("TAKAA HUB", "Speed set to " .. spd)
-        end)
-    end
-
-    dropdownBtn.Activated:Connect(function()
-        PlayClickSound()
-        listFrame.Visible = not listFrame.Visible
-    end)
-end
-
 CreateToggle(MainTab, "Respawn Down", "RespawnDown")
 CreateToggle(MainTab, "AFK Mode", "AfkMode")
 CreateToggle(MainTab, "AFK Farm Sky", "AutoFarmSky")
@@ -717,7 +583,6 @@ CreateToggle(MainTab, "Give Item", "GiveItemEnabled")
 CreateToggle(CombatTab, "Anti-Nextbot", "AntiNextbot")
 CreateToggle(CombatTab, "Anti-Flying", "AntiFly")
 CreateToggle(CombatTab, "Enable Speed", "CustomSpeed")
-CreateSpeedDropdown(CombatTab, "Speed Select", "SpeedValue")
 
 CreateToggle(UtilityTab, "Auto Collect", "AutoCollect")
 CreateToggle(UtilityTab, "Auto Whistle", "AutoWhistle")
